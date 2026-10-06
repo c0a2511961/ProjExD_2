@@ -130,7 +130,7 @@ def main():
         if not check_bound(kk_rct)[0] or not check_bound(kk_rct)[1]:
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
-        kk_img = kk_imgs[tuple(sum_mv)]
+        kk_img = kk_imgs.get(tuple(sum_mv), kk_imgs[(0, 0)])
         screen.blit(kk_img, kk_rct)
 
         idx = min(tmr // 500, 9)
