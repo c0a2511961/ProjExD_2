@@ -15,6 +15,13 @@ DELTA = {
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
+    yoko, tate = True, True
+    if obj_rct.left < 0 or WIDTH < obj_rct.right:
+        yoko = False
+    if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
+        tate = False
+    return yoko, tate
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -41,18 +48,22 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        if key_lst[pg.K_UP]:
-            sum_mv[1] -= 5
-        if key_lst[pg.K_DOWN]:
-            sum_mv[1] += 5
-        if key_lst[pg.K_LEFT]:
-            sum_mv[0] -= 5
-        if key_lst[pg.K_RIGHT]:
-            sum_mv[0] += 5
+        for key, mv in DELTA.items():
+            if key_lst[key]:
+                sum_mv[0] += mv[0]
+                sum_mv[1] += mv[1]
+
         kk_rct.move_ip(sum_mv)
+        if not check_bound(kk_rct)[0] or not check_bound(kk_rct)[1]:
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
 
-        bb_rct.move_ip(vx, vy)  
+        bb_rct.move_ip(vx, vy)
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:  
+            vx *= -1
+        if not tate:  
+            vy *= -1  
         screen.blit(bb_img, bb_rct)
 
         pg.display.update()
