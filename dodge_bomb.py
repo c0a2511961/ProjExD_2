@@ -138,10 +138,10 @@ def main():
         kk_img = kk_imgs.get(tuple(sum_mv), kk_imgs[(0, 0)])
         screen.blit(kk_img, kk_rct)
 
-        idx = min(tmr // 500, 9)
-        acc = bb_accs[idx]
-        avx = vx * acc
-        avy = vy * acc
+        idx = min(tmr // 500, 9)# 時間経過に応じたリストインデックス(0〜9)
+        acc = bb_accs[idx] # 現在の加速度
+        avx = vx * acc # 加速後の横方向速度
+        avy = vy * acc # 加速後の縦方向速度
 
         bb_img = bb_imgs[idx]
         bb_rct.width = bb_img.get_width()
