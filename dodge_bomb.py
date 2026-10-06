@@ -35,7 +35,7 @@ def main():
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  
     bb_img.set_colorkey((0, 0, 0))  
     bb_rct = bb_img.get_rect()
-    bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)  # ランダムな位置に配置
+    bb_rct.center = random.randint(10, WIDTH - 10), random.randint(10, HEIGHT - 10)  
     vx, vy = +5, +5  
 
     clock = pg.time.Clock()
