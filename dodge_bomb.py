@@ -18,6 +18,11 @@ DELTA = {
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
+    """
+    オブジェクトのRectが画面内か画面外かを判定する関数
+    引数: obj_rct (こうかとんRect または 爆弾Rect)
+    戻り値: タプル(横方向判定結果, 縦方向判定結果) 画面内ならTrue, 画面外ならFalse
+    """
     yoko, tate = True, True
     if obj_rct.left < 0 or WIDTH < obj_rct.right:
         yoko = False
