@@ -1,3 +1,4 @@
+import math
 import os
 import random
 import sys
@@ -53,7 +54,21 @@ def gameover(screen: pg.Surface) -> None:
 
     pg.display.update()
     time.sleep(5)
-    
+
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """
+    段階的に拡大・加速するための爆弾Surfaceリストと加速度リストを生成する関数
+    引数: なし
+    戻り値: 爆弾Surfaceのリスト, 加速度のリスト
+    """
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)]
+    for r in range(1, 11):
+        bb_img = pg.Surface((20 * r, 20 * r))
+        bb_img.set_colorkey((0, 0, 0))
+        pg.draw.circle(bb_img, (255, 0, 0), (10 * r, 10 * r), 10 * r)
+        bb_imgs.append(bb_img)
+    return bb_imgs, bb_accs    
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -63,9 +78,8 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
 
-    bb_img = pg.Surface((20, 20))  
-    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  
-    bb_img.set_colorkey((0, 0, 0))  
+    bb_imgs, bb_accs = init_bb_imgs()
+    bb_img = bb_imgs[0]
     bb_rct = bb_img.get_rect()
     bb_rct.center = random.randint(10, WIDTH - 10), random.randint(10, HEIGHT - 10)  
     vx, vy = +5, +5  
@@ -94,7 +108,16 @@ def main():
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
 
-        bb_rct.move_ip(vx, vy)
+        idx = min(tmr // 500, 9)
+        acc = bb_accs[idx]
+        avx = vx * acc
+        avy = vy * acc
+
+        bb_img = bb_imgs[idx]
+        bb_rct.width = bb_img.get_width()
+        bb_rct.height = bb_img.get_height()
+
+        bb_rct.move_ip(avx, avy)
         yoko, tate = check_bound(bb_rct)
         if not yoko:  
             vx *= -1
